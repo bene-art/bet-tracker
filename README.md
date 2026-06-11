@@ -6,6 +6,8 @@
 
 Bet logging, bankroll tracking, and model evaluation. Pure Python. SQLite. Zero dependencies.
 
+> **Status:** Stable. Pulled from a larger private system to demonstrate this slice as a standalone tool. Treat as a snapshot, not current production.
+
 ## Where this fits
 
 [props-scorer](https://github.com/bene-art/props-scorer) tells you *what's going to happen*. [betting-math-kit](https://github.com/bene-art/betting-math-kit) tells you *what to do about it*. This library answers the question that comes after: **did it work?**
