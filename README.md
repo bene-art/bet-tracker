@@ -19,8 +19,16 @@ props-scorer              betting-math-kit              bet-tracker
 │ → XGBoost    │         │ Kelly → stake size  │        │ capture closing line │
 │ → probability│         │                    │        │ settle → evaluate    │
 └──────────────┘         └────────────────────┘        └──────────────────────┘
-                               ▲                              │
-                               └──── metrics ◄────────────────┘
+       ▲                        ▲                              │
+       │                        │                              │
+       │                 ┌──────┴──────────┐                   │
+       │                 │   backtester    │◄──────────────────┘
+       │                 │ synthetic data  │   replay_to_tracker()
+       │                 │ walk-forward    │
+       │                 │ strategy compare│
+       │                 └─────────────────┘
+       │                        │
+       └──── tune model ◄──────┘
 ```
 
 You place a bet. You record the closing line. The result comes in. Now you can answer: is my model calibrated? Am I beating the closing line? Are my higher-edge bets actually winning more? That feedback loop is what separates a system from a spreadsheet.
@@ -244,15 +252,16 @@ CI runs on Python 3.10 - 3.13.
 
 ## Where this fits in the system
 
-Three repos, three concerns:
+Four repos, four concerns:
 
 | Repo | Question it answers |
-|------|-------------------|
+|------|---------------------|
 | [**props-scorer**](https://github.com/bene-art/props-scorer) | What's going to happen? |
 | [**betting-math-kit**](https://github.com/bene-art/betting-math-kit) | What should I do about it? |
 | [**bet-tracker**](https://github.com/bene-art/bet-tracker) | Did it work? |
+| [**backtester**](https://github.com/bene-art/backtester) | Would it have worked? |
 
-They work independently or together. props-scorer gives you a probability. betting-math-kit turns it into a stake. bet-tracker logs the bet, tracks your bankroll, and tells you whether your model is actually making money.
+They work independently or together. props-scorer gives you a probability. betting-math-kit turns it into a stake. bet-tracker logs the bet, tracks your bankroll, and tells you whether your model is actually making money. backtester lets you stress-test a strategy on synthetic data before risking real capital — and bridges into this library via `replay_to_tracker()` for persistent evaluation.
 
 ## License
 
