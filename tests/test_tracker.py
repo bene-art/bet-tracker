@@ -173,3 +173,56 @@ class TestSettle:
     def test_settle_nonexistent_raises(self):
         with _make_tracker() as t, pytest.raises(BetNotFoundError):
             t.settle(9999, BetStatus.WON)
+
+
+class TestListBetsDateFilter:
+    """list_bets start/end filter tests."""
+
+    def _make_tracker(self) -> BetTracker:
+        t = BetTracker(":memory:")
+        # Three bets on different dates — use placed_at via direct DB insert
+        # to control timestamps deterministically.
+        conn = t._conn
+        for i, date in enumerate(["2024-01-10", "2024-02-15", "2024-03-20"], 1):
+            conn.execute(
+                """
+                INSERT INTO bets
+                  (sport, event, market, selection, odds, stake,
+                   book, model_prob, fair_prob, edge, kelly_fraction,
+                   status, placed_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                """,
+                (
+                    "NFL", f"game{i}", "moneyline", "home",
+                    -110, 100.0, "FanDuel", 0.55, 0.50, 0.05, 0.10,
+                    "open", f"{date}T12:00:00",
+                ),
+            )
+        conn.commit()
+        return t
+
+    def test_start_filter_excludes_earlier(self):
+        t = self._make_tracker()
+        bets = t.list_bets(start="2024-02-01")
+        placed = [b.placed_at for b in bets]
+        assert all(p >= "2024-02-01" for p in placed)
+        assert len(bets) == 2
+
+    def test_end_filter_excludes_later(self):
+        t = self._make_tracker()
+        bets = t.list_bets(end="2024-02-01")
+        assert len(bets) == 1
+
+    def test_start_and_end_filter(self):
+        t = self._make_tracker()
+        bets = t.list_bets(start="2024-02-01", end="2024-03-01")
+        assert len(bets) == 1
+
+    def test_no_date_filter_returns_all(self):
+        t = self._make_tracker()
+        assert len(t.list_bets()) == 3
+
+    def test_date_filter_combined_with_sport(self):
+        t = self._make_tracker()
+        bets = t.list_bets(sport="NFL", start="2024-02-01")
+        assert len(bets) == 2
