@@ -50,3 +50,12 @@ jobs:
 
       - name: Ruff format
         run: ruff format --check src/ tests/
+
+      - name: Install mypy deps
+        run: |
+          pip install mypy
+          pip install "betting-math-kit @ git+https://github.com/bene-art/betting-math-kit@main"
+          pip install -e ".[dev]"
+
+      - name: mypy
+        run: mypy src/ --ignore-missing-imports
