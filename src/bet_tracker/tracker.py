@@ -354,14 +354,23 @@ class BetTracker:
         book: str | None = None,
         market: str | None = None,
         league: str | None = None,
+        start: str | None = None,
+        end: str | None = None,
     ) -> list[Bet]:
-        """Return bets matching the given filters."""
+        """Return bets matching the given filters.
+
+        Args:
+            start: ISO date string (inclusive). Filters on ``placed_at``.
+            end:   ISO date string (exclusive). Filters on ``placed_at``.
+        """
         where, params = _build_where(
             status=status,
             sport=sport,
             book=book,
             market=market,
             league=league,
+            start=start,
+            end=end,
         )
         rows = self._conn.execute(
             f"SELECT * FROM bets{where} ORDER BY id", params
@@ -582,8 +591,6 @@ class BetTracker:
             raise BetNotFoundError(f"Bet #{bet_id} not found")
 
 
-# Avoid circular import at module level
-from .types import EvaluationResult  # noqa: E402
 
 
 def _build_where(
