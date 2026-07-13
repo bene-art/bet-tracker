@@ -194,10 +194,21 @@ class TestListBetsDateFilter:
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 (
-                    "NFL", None, f"game{i}", "moneyline", "home",
-                    -110, 1.909, 100.0, "FanDuel",
-                    0.55, 0.50, 0.05, 0.10,
-                    "open", f"{date}T12:00:00",
+                    "NFL",
+                    None,
+                    f"game{i}",
+                    "moneyline",
+                    "home",
+                    -110,
+                    1.909,
+                    100.0,
+                    "FanDuel",
+                    0.55,
+                    0.50,
+                    0.05,
+                    0.10,
+                    "open",
+                    f"{date}T12:00:00",
                 ),
             )
         conn.commit()
