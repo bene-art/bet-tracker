@@ -591,8 +591,6 @@ class BetTracker:
             raise BetNotFoundError(f"Bet #{bet_id} not found")
 
 
-
-
 def _build_where(
     *,
     status: BetStatus | None = None,
