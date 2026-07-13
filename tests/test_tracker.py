@@ -187,14 +187,16 @@ class TestListBetsDateFilter:
             conn.execute(
                 """
                 INSERT INTO bets
-                  (sport, event, market, selection, odds, stake,
-                   book, model_prob, fair_prob, edge, kelly_fraction,
+                  (sport, league, event, market, selection,
+                   odds_american, odds_decimal, stake, book,
+                   model_prob, fair_prob, edge, kelly_fraction,
                    status, placed_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 (
-                    "NFL", f"game{i}", "moneyline", "home",
-                    -110, 100.0, "FanDuel", 0.55, 0.50, 0.05, 0.10,
+                    "NFL", None, f"game{i}", "moneyline", "home",
+                    -110, 1.909, 100.0, "FanDuel",
+                    0.55, 0.50, 0.05, 0.10,
                     "open", f"{date}T12:00:00",
                 ),
             )
