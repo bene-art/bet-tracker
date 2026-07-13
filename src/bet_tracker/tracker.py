@@ -14,7 +14,7 @@ from .exceptions import (
     InvalidAmountError,
     InvalidSettlementError,
 )
-from .types import BankrollEvent, BankrollEventType, Bet, BetStatus
+from .types import BankrollEvent, BankrollEventType, Bet, BetStatus, EvaluationResult
 
 
 def _now_iso() -> str:
