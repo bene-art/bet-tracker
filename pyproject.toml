@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 authors = [
-    { name = "Benjamin Easington", email = "ben@fructura.com" },
+    { name = "Benjamin Easington", email = "bene-art@users.noreply.github.com" },
 ]
 keywords = ["betting", "sports-betting", "bankroll", "tracker", "kelly-criterion"]
 classifiers = [
